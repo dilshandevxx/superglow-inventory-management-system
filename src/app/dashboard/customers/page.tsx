@@ -1,14 +1,33 @@
 import { createClient } from "@/lib/supabase-server";
-import { Plus, Search, Star, Edit, Trash2, List, LayoutGrid, MoreHorizontal, RotateCcw, ChevronDown, User, Phone, Wallet } from "lucide-react";
+import { Plus, Star, Edit, Trash2, List, LayoutGrid, MoreHorizontal, RotateCcw, ChevronDown, User, Phone, Wallet } from "lucide-react";
+import SearchInput from "@/components/ui/search-input";
+import Pagination from "@/components/ui/pagination";
 
-export default async function CustomersPage() {
+export default async function CustomersPage({
+  searchParams,
+}: {
+  searchParams: { [key: string]: string | string[] | undefined }
+}) {
+  const query = typeof searchParams.query === 'string' ? searchParams.query : '';
+  const page = typeof searchParams.page === 'string' ? parseInt(searchParams.page) : 1;
+  const limit = 10;
+  const offset = (page - 1) * limit;
+
   const supabase = createClient();
-  const { data: customers } = await supabase
+  let supabaseQuery = supabase
     .from('customers')
-    .select('*')
-    .order('created_at', { ascending: false });
+    .select('*', { count: 'exact' });
 
-  const totalCustomers = customers?.length || 0;
+  if (query) {
+    supabaseQuery = supabaseQuery.or(`name.ilike.%${query}%,phone.ilike.%${query}%`);
+  }
+
+  const { data: customers, count } = await supabaseQuery
+    .order('created_at', { ascending: false })
+    .range(offset, offset + limit - 1);
+
+  const totalCustomers = count || 0;
+  const totalPages = Math.ceil(totalCustomers / limit);
 
   return (
     <div className="animate-in fade-in duration-500 max-w-[1600px] w-full mx-auto">
@@ -23,14 +42,7 @@ export default async function CustomersPage() {
         </div>
 
         <div className="flex items-center gap-3 w-full lg:w-auto">
-          <div className="relative flex-1 lg:w-96">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500" />
-            <input 
-              type="text" 
-              placeholder="Search by name or phone..." 
-              className="w-full bg-[#20232b] border border-[#2c303a] rounded-full pl-11 pr-4 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-[#4ade80] transition-colors"
-            />
-          </div>
+          <SearchInput placeholder="Search by name or phone..." />
 
           <div className="flex bg-[#20232b] rounded-full border border-[#2c303a] p-1">
             <button className="p-1.5 bg-[#4ade80]/20 text-[#4ade80] rounded-full"><List className="h-4 w-4" /></button>
@@ -106,54 +118,59 @@ export default async function CustomersPage() {
         </div>
 
         {/* Right Customer List */}
-        <div className="flex-1 space-y-3">
+        <div className="flex-1 space-y-3 flex flex-col">
           {customers && customers.length > 0 ? (
-            customers.map((customer) => (
-              <div key={customer.id} className="panel p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 hover:border-slate-600 transition-colors group cursor-pointer">
-                <div className="flex items-center gap-4 flex-1">
-                  {/* Avatar Placeholder */}
-                  <div className="h-12 w-12 bg-[#2c303a] rounded-full flex items-center justify-center shrink-0 border border-slate-700">
-                    <User className="h-6 w-6 text-slate-400" />
+            <>
+              {customers.map((customer) => (
+                <div key={customer.id} className="panel p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 hover:border-slate-600 transition-colors group cursor-pointer">
+                  <div className="flex items-center gap-4 flex-1">
+                    <div className="h-12 w-12 bg-[#2c303a] rounded-full flex items-center justify-center shrink-0 border border-slate-700">
+                      <User className="h-6 w-6 text-slate-400" />
+                    </div>
+                    
+                    <div className="flex flex-col">
+                      <h3 className="text-base font-bold text-white group-hover:text-[#4ade80] transition-colors">{customer.name}</h3>
+                      <div className="flex items-center gap-3 mt-1">
+                        <span className="text-xs text-slate-400 flex items-center gap-1">
+                          <Phone className="h-3 w-3" /> {customer.phone || 'No phone'}
+                        </span>
+                        <span className="text-xs text-slate-500">•</span>
+                        <span className="bg-amber-500/10 text-amber-500 text-[10px] font-bold px-2 py-0.5 rounded-full flex items-center gap-1">
+                          <Star className="h-3 w-3 fill-current" /> {customer.loyalty_points} pts
+                        </span>
+                      </div>
+                    </div>
                   </div>
-                  
-                  <div className="flex flex-col">
-                    <h3 className="text-base font-bold text-white group-hover:text-[#4ade80] transition-colors">{customer.name}</h3>
-                    <div className="flex items-center gap-3 mt-1">
-                      <span className="text-xs text-slate-400 flex items-center gap-1">
-                        <Phone className="h-3 w-3" /> {customer.phone || 'No phone'}
+
+                  <div className="flex items-center gap-8 w-full sm:w-auto">
+                    <div className="flex flex-col">
+                      <span className="text-[10px] font-bold text-slate-500 uppercase">Credit Balance</span>
+                      <span className={`text-sm font-bold ${customer.credit_balance > 0 ? 'text-red-400' : 'text-white'}`}>
+                        Rs. {customer.credit_balance.toFixed(2)}
                       </span>
-                      <span className="text-xs text-slate-500">•</span>
-                      <span className="bg-amber-500/10 text-amber-500 text-[10px] font-bold px-2 py-0.5 rounded-full flex items-center gap-1">
-                        <Star className="h-3 w-3 fill-current" /> {customer.loyalty_points} pts
-                      </span>
+                    </div>
+                    
+                    <div className="flex items-center gap-2">
+                      <button className="h-8 w-8 rounded-full border border-[#2c303a] flex items-center justify-center text-slate-500 hover:text-[#4ade80] hover:bg-[#2c303a] transition-colors shrink-0">
+                        <Edit className="h-4 w-4" />
+                      </button>
+                      <button className="h-8 w-8 rounded-full border border-[#2c303a] flex items-center justify-center text-slate-500 hover:text-red-400 hover:bg-[#2c303a] transition-colors shrink-0">
+                        <Trash2 className="h-4 w-4" />
+                      </button>
                     </div>
                   </div>
                 </div>
-
-                <div className="flex items-center gap-8 w-full sm:w-auto">
-                  <div className="flex flex-col">
-                    <span className="text-[10px] font-bold text-slate-500 uppercase">Credit Balance</span>
-                    <span className={`text-sm font-bold ${customer.credit_balance > 0 ? 'text-red-400' : 'text-white'}`}>
-                      Rs. {customer.credit_balance.toFixed(2)}
-                    </span>
-                  </div>
-                  
-                  <div className="flex items-center gap-2">
-                    <button className="h-8 w-8 rounded-full border border-[#2c303a] flex items-center justify-center text-slate-500 hover:text-[#4ade80] hover:bg-[#2c303a] transition-colors shrink-0">
-                      <Edit className="h-4 w-4" />
-                    </button>
-                    <button className="h-8 w-8 rounded-full border border-[#2c303a] flex items-center justify-center text-slate-500 hover:text-red-400 hover:bg-[#2c303a] transition-colors shrink-0">
-                      <Trash2 className="h-4 w-4" />
-                    </button>
-                  </div>
-                </div>
-              </div>
-            ))
+              ))}
+              
+              <Pagination totalPages={totalPages} currentPage={page} />
+            </>
           ) : (
             <div className="panel p-12 flex flex-col items-center justify-center text-center">
               <User className="h-12 w-12 text-slate-600 mb-4" />
               <h3 className="text-lg font-bold text-white mb-2">No customers found</h3>
-              <p className="text-sm text-slate-400 max-w-md">Try adjusting your filters or click 'Add Customer' to add a new client to the database.</p>
+              <p className="text-sm text-slate-400 max-w-md">
+                {query ? `No results match "${query}"` : "Try adjusting your filters or click 'Add Customer' to add a new client to the database."}
+              </p>
             </div>
           )}
         </div>
