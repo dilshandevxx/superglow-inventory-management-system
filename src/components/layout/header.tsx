@@ -1,7 +1,7 @@
 'use client';
 
 import { Bell, LogOut, Settings, Search } from 'lucide-react';
-import { createClient } from '@/lib/supabase';
+import { createClient } from '@/lib/supabase-client';
 import { useRouter } from 'next/navigation';
 
 export function Header({ user }: { user: { name: string, role: string } }) {
@@ -13,6 +13,7 @@ export function Header({ user }: { user: { name: string, role: string } }) {
     router.push('/login');
     router.refresh();
   };
+
 
   return (
     <header className="flex h-20 w-full items-center justify-between px-6 border-b border-[#2c303a] bg-[#181a1f] shrink-0">
