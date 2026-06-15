@@ -32,13 +32,13 @@ export default function SearchInput({ placeholder }: { placeholder: string }) {
 
   return (
     <div className="relative flex-1 lg:w-96">
-      <Search className={`absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 ${isPending ? 'text-[#4ade80] animate-pulse' : 'text-slate-500'}`} />
+      <Search className={`absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 ${isPending ? 'text-[#99E2C6] animate-pulse' : 'text-[#94A3B8]'}`} />
       <input 
         type="text" 
         value={query}
         onChange={(e) => setQuery(e.target.value)}
         placeholder={placeholder} 
-        className="w-full bg-[#20232b] border border-[#2c303a] rounded-full pl-11 pr-4 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-[#4ade80] transition-colors"
+        className="w-full bg-[#1A1A1F] border border-white/[0.05] rounded-xl pl-11 pr-4 py-3 text-sm text-white placeholder-[#94A3B8] focus:outline-none focus:border-[#99E2C6] transition-colors"
       />
     </div>
   );
