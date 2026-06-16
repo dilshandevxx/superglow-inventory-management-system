@@ -1,150 +1,191 @@
 import { createClient } from "@/lib/supabase-server";
-import { Package, ShoppingCart, Users, TrendingUp, AlertTriangle, ArrowUpRight, Sparkles, Download } from "lucide-react";
-import { DashboardCharts } from "./dashboard-charts";
+import { Package, ShoppingCart, AlertTriangle, ArrowUpRight, ArrowDownRight, ArrowRight, BarChart3, TrendingUp, Users } from "lucide-react";
 
-export default async function DashboardPage() {
+export default async function Dashboard() {
   const supabase = createClient();
 
-  // Fetch some real stats
+  // Basic queries to get some real stats
   const { count: productCount } = await supabase.from('products').select('*', { count: 'exact', head: true });
   const { count: branchCount } = await supabase.from('branches').select('*', { count: 'exact', head: true });
-  const { count: userCount } = await supabase.from('user_profiles').select('*', { count: 'exact', head: true });
-
-  const stats = [
-    { name: "Total Products", value: productCount?.toString() || "0", icon: Package, trend: "+12%", trendBg: "bg-[#99E2C6]/10", trendText: "text-[#99E2C6]" },
-    { name: "Active Branches", value: branchCount?.toString() || "0", icon: ShoppingCart, trend: "Stable", trendBg: "bg-white/[0.05]", trendText: "text-[#94A3B8]" },
-    { name: "Staff Members", value: userCount?.toString() || "0", icon: Users, trend: "+2%", trendBg: "bg-[#99E2C6]/10", trendText: "text-[#99E2C6]" },
-    { name: "Daily Revenue", value: "Rs. 12,450", icon: TrendingUp, trend: "+24.5%", trendBg: "bg-[#99E2C6]/10", trendText: "text-[#99E2C6]" },
-  ];
+  
+  // Example dummy data for the rest (to be replaced with actual views later)
+  const todaySales = "$12,450";
+  const lowStockCount = 42;
 
   return (
-    <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 max-w-[1600px] mx-auto w-full pb-10">
+    <div className="space-y-6">
       
-      {/* Header Area */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-8 gap-4 px-2">
-        <div>
-          <h1 className="text-3xl font-black text-white tracking-tight flex items-center gap-3">
-            Dashboard Overview <Sparkles className="h-6 w-6 text-[#99E2C6] animate-pulse" />
-          </h1>
-          <p className="mt-2 text-[#94A3B8] text-sm">Real-time overview of operations and AI forecasting.</p>
-        </div>
-        <div className="flex gap-3">
-          <button className="btn-secondary flex items-center gap-2 text-sm">
-            <Download className="h-4 w-4" /> Export Report
-          </button>
-          <button className="btn-primary flex items-center gap-2 text-sm">
-            <TrendingUp className="h-4 w-4" /> Run AI Analysis
-          </button>
-        </div>
-      </div>
-
-      {/* Stats Cards Row */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        {stats.map((stat) => (
-          <div key={stat.name} className={`panel p-6 flex flex-col justify-between h-40 hover:-translate-y-1 transition-all duration-300 cursor-pointer`}>
-            <div className="flex justify-between items-start">
-              <div className="flex items-center gap-3">
-                <div className="text-[#94A3B8]">
-                  <stat.icon className="h-6 w-6" strokeWidth={1.5} />
-                </div>
-              </div>
-              <span className={`flex items-center text-xs font-bold px-3 py-1 rounded-full ${stat.trendBg} ${stat.trendText}`}>
-                {stat.trend} {stat.trend.startsWith('+') && <ArrowUpRight className="h-3 w-3 ml-0.5" />}
-              </span>
-            </div>
-            
-            <div>
-              <p className="text-sm font-semibold text-[#94A3B8] mb-1">{stat.name}</p>
-              <p className="text-4xl font-bold tracking-tight text-white">{stat.value}</p>
-            </div>
-          </div>
-        ))}
-      </div>
-
-      {/* Charts Section */}
-      <div className="panel p-8 mb-8">
-        <div className="mb-6 flex justify-between items-center border-b border-white/[0.05] pb-4">
-          <h2 className="text-lg font-bold text-white flex items-center gap-2">
-            Revenue Analytics
-          </h2>
-          <div className="flex bg-[#1A1A1F] border border-white/[0.05] rounded-full p-1">
-            <button className="px-5 py-2 bg-[#2A2A32] text-white rounded-full text-xs font-bold transition-all shadow-sm">This Week</button>
-            <button className="px-5 py-2 text-[#94A3B8] hover:text-white rounded-full text-xs font-bold transition-colors">This Month</button>
-          </div>
-        </div>
-        <DashboardCharts />
-      </div>
-
-      {/* AI Insights & Alerts Grid */}
+      {/* Top Section: Welcome & Stats */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         
-        {/* AI Insight Flat Card */}
-        <div className="lg:col-span-2 panel p-8 flex flex-col">
-          <div className="flex items-center justify-between mb-6">
-            <div className="flex items-center gap-3">
-              <Sparkles className="h-6 w-6 text-[#99E2C6]" strokeWidth={1.5} />
-              <h3 className="font-bold text-white text-lg">AI Forecasting</h3>
+        {/* Core Stats / Big Cards */}
+        <div className="lg:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="bg-gradient-to-br from-[#8B5CF6] to-[#6D28D9] rounded-2xl p-6 relative overflow-hidden shadow-lg shadow-[#8B5CF6]/20">
+            <div className="absolute top-0 right-0 p-4 opacity-50">
+              <Package className="w-24 h-24 text-white" />
             </div>
-            <span className="bg-[#99E2C6]/10 text-[#99E2C6] px-4 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-wider flex items-center gap-2">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#99E2C6] animate-pulse"></span>
-              Active
-            </span>
+            <h3 className="text-white/80 text-sm font-medium mb-1 relative z-10">Total Products</h3>
+            <p className="text-4xl font-bold text-white relative z-10 mb-4">{productCount || 0}</p>
+            <div className="flex items-center gap-2 text-white/90 text-sm font-medium relative z-10">
+              <span className="flex items-center justify-center w-8 h-8 rounded-full bg-white/20">
+                <ArrowUpRight className="w-4 h-4" />
+              </span>
+              +12 new this week
+            </div>
           </div>
-          
-          <div className="bg-[#1A1A1F] rounded-2xl p-6 flex-1 border border-white/[0.02]">
-            <h4 className="text-xl font-bold mb-3 text-white">Weekend Surge Expected</h4>
-            <p className="text-[#94A3B8] leading-relaxed text-sm">
-              Based on historical data and current foot traffic trends across the Kiriella and Hindurangala branches, the AI model predicts a <strong className="text-[#99E2C6] font-bold">42% increase</strong> in Grocery and Household Product sales this upcoming weekend.
-            </p>
-            <div className="mt-8 flex gap-4">
-              <button className="btn-secondary text-xs border-none bg-[#2A2A32]">
-                View Detailed Forecast
-              </button>
-              <button className="btn-primary text-xs bg-[#99E2C6]">
-                Adjust Inventory
-              </button>
+
+          <div className="bg-gradient-to-br from-[#D946EF] to-[#9333EA] rounded-2xl p-6 relative overflow-hidden shadow-lg shadow-[#D946EF]/20">
+            <div className="absolute top-0 right-0 p-4 opacity-50">
+              <ShoppingCart className="w-24 h-24 text-white" />
+            </div>
+            <h3 className="text-white/80 text-sm font-medium mb-1 relative z-10">Today's Sales</h3>
+            <p className="text-4xl font-bold text-white relative z-10 mb-4">{todaySales}</p>
+            <div className="flex items-center gap-2 text-white/90 text-sm font-medium relative z-10">
+              <span className="flex items-center justify-center w-8 h-8 rounded-full bg-white/20">
+                <ArrowUpRight className="w-4 h-4" />
+              </span>
+              +8% from yesterday
             </div>
           </div>
         </div>
 
-        {/* Alerts Flat Card */}
-        <div className="bg-[#FBE7A1] rounded-[20px] p-8 flex flex-col text-[#1A1A1F] shadow-sm">
-          <div className="flex items-center justify-between mb-6">
-            <div className="flex items-center gap-3">
-              <AlertTriangle className="h-6 w-6" strokeWidth={1.5} />
-              <h3 className="font-bold text-lg">Stock Alerts</h3>
+        {/* Quick Actions / System Health */}
+        <div className="bg-[#18181B] border border-white/[0.05] rounded-2xl p-6 flex flex-col items-center justify-center text-center">
+          <div className="w-20 h-20 rounded-full bg-gradient-to-br from-[#EF4444] to-[#B91C1C] p-1 mb-4 shadow-[0_0_20px_rgba(239,68,68,0.2)]">
+            <div className="w-full h-full rounded-full bg-[#18181B] flex items-center justify-center relative">
+              <AlertTriangle className="h-8 w-8 text-[#EF4444]" />
+              <span className="absolute bottom-0 right-0 w-4 h-4 bg-red-500 border-2 border-[#18181B] rounded-full animate-pulse"></span>
             </div>
-            <span className="text-[#1A1A1F]/60 text-xs font-bold bg-[#1A1A1F]/10 px-3 py-1 rounded-full">3 critical</span>
           </div>
-          
-          <div className="space-y-3 flex-1">
-            {[
-              { item: 'Samba Rice 5kg', branch: 'Kiriella Branch', qty: '2 left', status: 'critical' },
-              { item: 'Samsung 32" TV', branch: 'Hindurangala Branch', qty: '1 left', status: 'critical' },
-              { item: 'Lux Soap 100g', branch: 'Main Warehouse', qty: '15 left', status: 'warning' },
-            ].map((alert, i) => (
-              <div key={i} className="flex flex-col bg-white/40 p-4 rounded-xl hover:bg-white/60 transition-all cursor-pointer">
-                <div className="flex items-start justify-between mb-1">
-                  <p className="font-bold text-sm">{alert.item}</p>
-                  <span className={`text-[10px] font-black px-2 py-0.5 rounded-full ${
-                    alert.status === 'critical' 
-                      ? 'text-[#FFA6A6] bg-[#1A1A1F]' 
-                      : 'text-[#1A1A1F] bg-[#99E2C6]'
-                  }`}>
-                    {alert.qty}
-                  </span>
+          <h3 className="text-lg font-bold text-white">{lowStockCount} Items</h3>
+          <p className="text-sm text-[#A1A1AA] mb-6">Low Stock Warnings</p>
+          <div className="flex items-center gap-3 w-full">
+            <button className="flex-1 bg-[#27272A] hover:bg-[#3F3F46] text-white py-2 rounded-lg text-sm font-medium transition-colors">View Report</button>
+            <button className="flex-1 bg-[#EF4444] hover:bg-[#DC2626] text-white py-2 rounded-lg text-sm font-medium transition-colors">Reorder</button>
+          </div>
+        </div>
+      </div>
+
+      {/* Middle Section: Charts & Targets */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        
+        {/* Weekly Revenue Chart */}
+        <div className="lg:col-span-2 bg-[#18181B] border border-white/[0.05] rounded-2xl p-6">
+          <div className="flex items-center justify-between mb-6">
+            <h3 className="text-sm font-bold text-white">Weekly Revenue</h3>
+            <span className="text-xs text-[#A1A1AA]">Last 7 Days</span>
+          </div>
+          <div className="h-48 w-full bg-[#121214] rounded-xl border border-white/[0.02] flex items-end justify-between p-4 relative overflow-hidden">
+            {/* Fake Chart line */}
+            <div className="absolute inset-0 flex items-end opacity-20">
+              <svg viewBox="0 0 100 100" preserveAspectRatio="none" className="w-full h-full text-[#8B5CF6]">
+                <path d="M0,100 L0,50 Q25,20 50,60 T100,30 L100,100 Z" fill="currentColor" />
+              </svg>
+            </div>
+            {/* Fake Bars */}
+            {[65, 80, 55, 110, 85, 95, 130].map((h, i) => (
+              <div key={i} className="w-[10%] bg-[#8B5CF6] rounded-t-sm relative group cursor-pointer" style={{ height: `${h / 1.5}%` }}>
+                <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-[#27272A] text-white text-[10px] px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity">
+                  ${(h * 120).toLocaleString()}
                 </div>
-                <p className="text-xs font-medium opacity-60">{alert.branch}</p>
               </div>
             ))}
           </div>
-          
-          <button className="w-full mt-6 py-3 rounded-full bg-[#1A1A1F]/5 hover:bg-[#1A1A1F]/10 transition-colors text-xs font-bold">
-            View All Alerts
-          </button>
         </div>
 
+        {/* Warehouse Capacity Target */}
+        <div className="bg-[#18181B] border border-white/[0.05] rounded-2xl p-6 flex flex-col items-center">
+          <h3 className="text-sm font-bold text-white w-full text-left mb-6">Warehouse Capacity</h3>
+          
+          <div className="relative w-32 h-32 mb-6">
+            <svg className="w-full h-full" viewBox="0 0 100 100">
+              <circle className="text-[#27272A] stroke-current" strokeWidth="8" cx="50" cy="50" r="40" fill="transparent"></circle>
+              <circle className="text-[#8B5CF6] stroke-current" strokeWidth="8" strokeLinecap="round" cx="50" cy="50" r="40" fill="transparent" strokeDasharray="251.2" strokeDashoffset="55.2"></circle>
+            </svg>
+            <div className="absolute inset-0 flex items-center justify-center flex-col">
+              <span className="text-2xl font-bold text-white">78%</span>
+            </div>
+          </div>
+          
+          <div className="flex w-full justify-between mt-auto">
+            <div className="flex items-center gap-2">
+              <div className="w-2 h-2 rounded-full bg-[#8B5CF6]"></div>
+              <div>
+                <p className="text-[10px] font-bold text-white">Used Space</p>
+                <p className="text-[10px] text-[#A1A1AA]">Optimal</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="w-2 h-2 rounded-full bg-[#3F3F46]"></div>
+              <div>
+                <p className="text-[10px] font-bold text-white">Available</p>
+                <p className="text-[10px] text-[#A1A1AA]">22% remaining</p>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
+
+      {/* Inventory Alerts / Recent Activity */}
+      <div className="bg-[#18181B] border border-white/[0.05] rounded-2xl p-6">
+        <div className="flex items-center justify-between mb-6">
+          <h3 className="text-sm font-bold text-white">Recent Inventory Alerts</h3>
+          <button className="text-xs text-[#A1A1AA] hover:text-white transition-colors">View Inventory</button>
+        </div>
+        
+        <div className="overflow-x-auto">
+          <table className="w-full text-left border-collapse">
+            <thead>
+              <tr className="border-b border-white/[0.05] text-[10px] uppercase tracking-wider text-[#A1A1AA]">
+                <th className="pb-3 font-medium">Product Name</th>
+                <th className="pb-3 font-medium">Branch</th>
+                <th className="pb-3 font-medium">Current Stock</th>
+                <th className="pb-3 font-medium">Status</th>
+                <th className="pb-3 font-medium"></th>
+              </tr>
+            </thead>
+            <tbody className="text-sm">
+              <tr className="border-b border-white/[0.02] hover:bg-white/[0.02] transition-colors">
+                <td className="py-4">
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 rounded-full bg-[#27272A] flex items-center justify-center text-xs font-bold text-white">SR</div>
+                    <span className="font-semibold text-white">Samba Rice 5kg</span>
+                  </div>
+                </td>
+                <td className="py-4 text-[#A1A1AA]">Kiriella Branch</td>
+                <td className="py-4 font-semibold text-white">2 Units</td>
+                <td className="py-4">
+                  <span className="flex items-center gap-2 text-[#EF4444] text-xs font-medium">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#EF4444]"></span> Critical
+                  </span>
+                </td>
+                <td className="py-4 text-right">
+                  <button className="text-[#A1A1AA] hover:text-white">•••</button>
+                </td>
+              </tr>
+              <tr className="hover:bg-white/[0.02] transition-colors">
+                <td className="py-4">
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 rounded-full bg-[#27272A] flex items-center justify-center text-xs font-bold text-white">LS</div>
+                    <span className="font-semibold text-white">Lux Soap 100g</span>
+                  </div>
+                </td>
+                <td className="py-4 text-[#A1A1AA]">Main Warehouse</td>
+                <td className="py-4 font-semibold text-white">15 Units</td>
+                <td className="py-4">
+                  <span className="flex items-center gap-2 text-[#F59E0B] text-xs font-medium">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#F59E0B]"></span> Warning
+                  </span>
+                </td>
+                <td className="py-4 text-right">
+                  <button className="text-[#A1A1AA] hover:text-white">•••</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      
     </div>
   );
 }

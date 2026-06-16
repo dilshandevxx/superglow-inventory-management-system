@@ -31,9 +31,9 @@ export default async function DashboardLayout({
       <Sidebar role={userRole} />
       
       {/* Main Content Area */}
-      <div className="flex-1 flex flex-col h-full overflow-hidden border-l border-[#2c303a]">
+      <div className="flex-1 flex flex-col h-full overflow-hidden">
         <Header user={{ name: fullName, role: userRole }} />
-        <main className="flex-1 overflow-y-auto p-6 md:p-8 w-full">
+        <main className="flex-1 overflow-y-auto p-4 md:p-6 w-full bg-[#121214]">
           {children}
         </main>
       </div>
