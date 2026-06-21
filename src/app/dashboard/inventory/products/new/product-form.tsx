@@ -129,6 +129,11 @@ export default function ProductForm({
               name="barcode" 
               placeholder="Scan or type barcode"
               className="glass-input w-full font-mono"
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  e.preventDefault(); // Prevent scanner from submitting the form
+                }
+              }}
             />
           </div>
         </div>
