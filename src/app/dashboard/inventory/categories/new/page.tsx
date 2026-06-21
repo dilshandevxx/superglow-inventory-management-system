@@ -2,7 +2,6 @@ import { ArrowLeft, Bookmark } from "lucide-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createCategory } from "../../actions";
-import { SubmitButton } from "@/components/ui/submit-button"; // Assuming there's a submit button, if not I'll use a regular button.
 
 export default function NewCategoryPage() {
   async function action(formData: FormData) {
