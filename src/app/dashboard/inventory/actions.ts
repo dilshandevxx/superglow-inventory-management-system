@@ -91,9 +91,8 @@ export async function createCategory(formData: FormData) {
 export async function deleteCategory(id: string) {
   const supabase = createClient();
   const { error } = await supabase.from('categories').delete().eq('id', id);
-  if (error) return { success: false, error: error.message };
+  if (error) throw new Error(error.message);
   revalidatePath("/dashboard/inventory/categories");
-  return { success: true };
 }
 
 // --- Brands ---
@@ -110,9 +109,8 @@ export async function createBrand(formData: FormData) {
 export async function deleteBrand(id: string) {
   const supabase = createClient();
   const { error } = await supabase.from('brands').delete().eq('id', id);
-  if (error) return { success: false, error: error.message };
+  if (error) throw new Error(error.message);
   revalidatePath("/dashboard/inventory/brands");
-  return { success: true };
 }
 
 // --- Transfers ---
