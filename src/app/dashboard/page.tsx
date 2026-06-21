@@ -1,5 +1,5 @@
 import { createClient } from "@/lib/supabase-server";
-import { ArrowRight, Settings, DollarSign, Receipt, CreditCard, Banknote, TrendingUp, Users, Package, Activity } from "lucide-react";
+import { ArrowRight, Settings, DollarSign, Receipt, CreditCard, Banknote, TrendingUp, Users, Package, Activity, Store } from "lucide-react";
 import Link from "next/link";
 
 export default async function Dashboard() {
