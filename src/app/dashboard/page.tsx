@@ -342,7 +342,7 @@ export default async function Dashboard() {
                           <p className="font-bold text-sm text-white tracking-wide">{tx.invoice_number}</p>
                           <span className="text-[9px] font-black text-[#A1A1AA] uppercase tracking-widest bg-[#252525] px-2 py-0.5 rounded">{new Date(tx.created_at).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
                         </div>
-                        <p className="text-xs font-medium text-[#A1A1AA] tracking-wide">{tx.customers?.name || 'Walk-in Customer'} <span className="mx-1 opacity-50">•</span> <span className="opacity-80">Cashier: {tx.user_profiles?.full_name?.split(' ')[0] || 'System'}</span></p>
+                        <p className="text-xs font-medium text-[#A1A1AA] tracking-wide">{((tx.customers as any)?.name || (tx.customers as any)?.[0]?.name) || 'Walk-in Customer'} <span className="mx-1 opacity-50">•</span> <span className="opacity-80">Cashier: {((tx.user_profiles as any)?.full_name || (tx.user_profiles as any)?.[0]?.full_name)?.split(' ')[0] || 'System'}</span></p>
                       </div>
                     </div>
                     <div className="text-right">
