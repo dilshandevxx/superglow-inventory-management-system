@@ -6,7 +6,7 @@ import { addBranch } from "./actions";
 
 export function SettingsClient({ branches, staff }: { branches: any[], staff: any[] }) {
   const [activeTab, setActiveTab] = useState("branches");
-  
+
   // Add Branch Form State
   const [branchName, setBranchName] = useState("");
   const [branchAddress, setBranchAddress] = useState("");
@@ -17,10 +17,10 @@ export function SettingsClient({ branches, staff }: { branches: any[], staff: an
   const handleAddBranch = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!branchName) return;
-    
+
     setIsSubmittingBranch(true);
     const result = await addBranch({ name: branchName, address: branchAddress, phone: branchPhone });
-    
+
     if (result.error) {
       alert(result.error);
     } else {
@@ -34,28 +34,28 @@ export function SettingsClient({ branches, staff }: { branches: any[], staff: an
 
   return (
     <div className="flex flex-col md:flex-row gap-8">
-      
+
       {/* Sidebar Navigation */}
       <div className="w-full md:w-64 shrink-0 space-y-2">
-        <button 
+        <button
           onClick={() => setActiveTab("general")}
           className={`w-full flex items-center gap-3 px-5 py-4 rounded-2xl font-bold text-sm transition-all ${activeTab === 'general' ? 'bg-[#252525] text-white shadow-sm' : 'text-[#A1A1AA] hover:bg-[#252525]/40 hover:text-white'}`}
         >
           <SettingsIcon className={`h-5 w-5 ${activeTab === 'general' ? 'text-[#D1E8D5]' : ''}`} /> General
         </button>
-        <button 
+        <button
           onClick={() => setActiveTab("branches")}
           className={`w-full flex items-center gap-3 px-5 py-4 rounded-2xl font-bold text-sm transition-all ${activeTab === 'branches' ? 'bg-[#252525] text-white shadow-sm' : 'text-[#A1A1AA] hover:bg-[#252525]/40 hover:text-white'}`}
         >
           <Store className={`h-5 w-5 ${activeTab === 'branches' ? 'text-[#D1E8D5]' : ''}`} /> Branches
         </button>
-        <button 
+        <button
           onClick={() => setActiveTab("staff")}
           className={`w-full flex items-center gap-3 px-5 py-4 rounded-2xl font-bold text-sm transition-all ${activeTab === 'staff' ? 'bg-[#252525] text-white shadow-sm' : 'text-[#A1A1AA] hover:bg-[#252525]/40 hover:text-white'}`}
         >
           <Users className={`h-5 w-5 ${activeTab === 'staff' ? 'text-[#D1E8D5]' : ''}`} /> Staff & Users
         </button>
-        <button 
+        <button
           onClick={() => setActiveTab("roles")}
           className={`w-full flex items-center gap-3 px-5 py-4 rounded-2xl font-bold text-sm transition-all ${activeTab === 'roles' ? 'bg-[#252525] text-white shadow-sm' : 'text-[#A1A1AA] hover:bg-[#252525]/40 hover:text-white'}`}
         >
@@ -65,7 +65,7 @@ export function SettingsClient({ branches, staff }: { branches: any[], staff: an
 
       {/* Main Content Area */}
       <div className="flex-1">
-        
+
         {/* Branches Tab */}
         {activeTab === 'branches' && (
           <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-300">
@@ -74,7 +74,7 @@ export function SettingsClient({ branches, staff }: { branches: any[], staff: an
                 <h2 className="text-xl font-bold text-white">Branch Management</h2>
                 <p className="text-sm text-[#A1A1AA]">Manage physical store locations and warehouses.</p>
               </div>
-              <button 
+              <button
                 onClick={() => setShowAddBranch(!showAddBranch)}
                 className="bg-[#D1E8D5] text-[#1A1A1A] hover:bg-white transition-colors px-5 py-2.5 rounded-full font-bold text-sm flex items-center gap-2 shadow-sm"
               >
@@ -90,15 +90,19 @@ export function SettingsClient({ branches, staff }: { branches: any[], staff: an
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="relative">
                       <Building className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-[#A1A1AA]" />
-                      <input 
+                      <input
                         type="text" required placeholder="Branch Name"
                         value={branchName} onChange={e => setBranchName(e.target.value)}
                         className="w-full bg-[#09090B] border border-[#252525] rounded-xl pl-12 pr-4 py-3 text-white focus:border-[#D1E8D5] focus:outline-none"
                       />
+
+
+
+                      <div>hello word</div>
                     </div>
                     <div className="relative">
                       <Phone className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-[#A1A1AA]" />
-                      <input 
+                      <input
                         type="text" placeholder="Phone Number"
                         value={branchPhone} onChange={e => setBranchPhone(e.target.value)}
                         className="w-full bg-[#09090B] border border-[#252525] rounded-xl pl-12 pr-4 py-3 text-white focus:border-[#D1E8D5] focus:outline-none"
@@ -107,7 +111,7 @@ export function SettingsClient({ branches, staff }: { branches: any[], staff: an
                   </div>
                   <div className="relative">
                     <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-[#A1A1AA]" />
-                    <input 
+                    <input
                       type="text" placeholder="Full Address"
                       value={branchAddress} onChange={e => setBranchAddress(e.target.value)}
                       className="w-full bg-[#09090B] border border-[#252525] rounded-xl pl-12 pr-4 py-3 text-white focus:border-[#D1E8D5] focus:outline-none"

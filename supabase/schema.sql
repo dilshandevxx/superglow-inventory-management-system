@@ -81,6 +81,7 @@ CREATE TABLE customers (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   name VARCHAR(255) NOT NULL,
   phone VARCHAR(20),
+  email VARCHAR(255),
   loyalty_points INTEGER DEFAULT 0,
   credit_balance DECIMAL(10, 2) DEFAULT 0,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()

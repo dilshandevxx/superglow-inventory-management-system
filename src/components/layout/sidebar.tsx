@@ -18,21 +18,22 @@ export function Sidebar({ role }: { role: string }) {
   const allowedNav = navigation.filter(item => item.roles.includes(role));
 
   return (
-    <div className="hidden lg:flex h-full w-[260px] flex-col bg-[#1A1A1A] z-20 shrink-0 border-r border-[#252525] font-sans">
+    <div className="hidden lg:flex h-full w-[260px] flex-col bg-[var(--background)] z-20 shrink-0 border-r border-[var(--border)] font-sans relative">
       
       {/* Brand Logo Area */}
-      <div className="flex h-24 items-center px-8">
-        <div className="flex items-center gap-3">
-          <div className="h-8 w-8 rounded flex items-center justify-center bg-[#D1E8D5] text-[#1A1A1A]">
+      <div className="flex h-24 items-center px-8 relative group cursor-pointer">
+        <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/0 via-emerald-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+        <div className="flex items-center gap-3 relative z-10">
+          <div className="h-9 w-9 rounded-xl flex items-center justify-center bg-gradient-to-br from-emerald-400 to-cyan-500 text-black shadow-[0_0_20px_rgba(16,185,129,0.3)] group-hover:scale-105 transition-transform duration-300">
             <Hexagon className="h-5 w-5 fill-current" />
           </div>
-          <span className="text-xl font-bold tracking-tight text-white">SuperGlow</span>
+          <span className="text-2xl font-black tracking-tighter text-white bg-clip-text text-transparent bg-gradient-to-r from-white to-slate-400">SuperGlow</span>
         </div>
       </div>
 
       {/* Navigation Links */}
-      <nav className="flex-1 flex flex-col space-y-1.5 px-4 py-4 overflow-y-auto custom-scrollbar">
-        <p className="px-4 text-[10px] font-bold uppercase tracking-wider text-[#A1A1AA] mb-3">Main Menu</p>
+      <nav className="flex-1 flex flex-col space-y-2 px-4 py-6 overflow-y-auto custom-scrollbar">
+        <p className="px-4 text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-2">Main Menu</p>
         
         {allowedNav.map((item) => {
           const isActive = pathname === item.href || (item.href !== '/dashboard' && pathname.startsWith(item.href));
@@ -40,32 +41,40 @@ export function Sidebar({ role }: { role: string }) {
             <Link
               key={item.name}
               href={item.href}
-              className={`group flex items-center gap-3 rounded-2xl px-4 py-3.5 text-sm font-semibold transition-all duration-200
+              className={`group relative flex items-center gap-3 rounded-2xl px-4 py-3.5 text-sm font-semibold transition-all duration-300 overflow-hidden
                 ${isActive 
-                  ? 'bg-[#252525] text-white shadow-sm' 
-                  : 'text-[#A1A1AA] hover:bg-[#252525]/40 hover:text-white'
+                  ? 'text-white' 
+                  : 'text-slate-400 hover:text-white hover:bg-white/[0.04]'
                 }
               `}
             >
+              {isActive && (
+                <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/10 to-cyan-500/5 border border-emerald-500/20 rounded-2xl pointer-events-none"></div>
+              )}
+              {isActive && (
+                <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-8 bg-emerald-500 rounded-r-full shadow-[0_0_10px_rgba(16,185,129,0.8)]"></div>
+              )}
               <item.icon 
-                className={`h-5 w-5 ${isActive ? 'text-[#D1E8D5]' : 'text-[#A1A1AA] group-hover:text-white'}`} 
+                className={`h-5 w-5 relative z-10 ${isActive ? 'text-emerald-400 drop-shadow-[0_0_8px_rgba(16,185,129,0.5)]' : 'text-slate-500 group-hover:text-slate-300'}`} 
                 strokeWidth={isActive ? 2.5 : 2} 
               />
-              <span>{item.name}</span>
+              <span className="relative z-10">{item.name}</span>
             </Link>
           );
         })}
       </nav>
       
-      {/* Bottom Area: Pale Mint Help Card */}
+      {/* Bottom Area: Premium Help Card */}
       <div className="p-5 mt-auto mb-2">
-        <div className="rounded-[24px] bg-[#E2F1E4] p-5 relative overflow-hidden flex flex-col items-center text-center shadow-inner">
-          <div className="h-10 w-10 bg-white rounded-full flex items-center justify-center mb-3 shadow-sm text-[#1A1A1A]">
-            <HelpCircle className="h-5 w-5" strokeWidth={2.5} />
+        <div className="rounded-[24px] bg-gradient-to-b from-[#121215] to-[#0a0a0c] p-6 relative flex flex-col items-center text-center border border-[var(--border)] group hover:border-emerald-500/30 transition-colors duration-500 shadow-xl overflow-hidden">
+          <div className="absolute -top-12 -right-12 w-24 h-24 bg-emerald-500/20 blur-2xl rounded-full group-hover:bg-emerald-500/30 transition-colors duration-500"></div>
+          
+          <div className="h-12 w-12 bg-white/[0.05] border border-white/10 rounded-2xl flex items-center justify-center mb-4 shadow-sm text-slate-300 group-hover:text-emerald-400 group-hover:scale-110 transition-all duration-300 backdrop-blur-md">
+            <HelpCircle className="h-6 w-6" strokeWidth={2} />
           </div>
-          <p className="text-sm font-bold text-[#1A1A1A] mb-1">Need Help?</p>
-          <p className="text-[11px] font-medium text-[#1A1A1A]/70 mb-5">Check our documentation</p>
-          <button className="w-full py-2.5 bg-[#1A1A1A] text-white rounded-full text-xs font-bold transition-transform hover:scale-[1.02] active:scale-95 shadow-md">
+          <p className="text-sm font-bold text-white mb-1 tracking-wide">Need Help?</p>
+          <p className="text-[11px] font-medium text-slate-400 mb-5">Check our documentation</p>
+          <button className="w-full py-3 bg-white/[0.05] hover:bg-white/[0.1] border border-white/10 text-white rounded-xl text-xs font-bold transition-all hover:scale-[1.02] active:scale-95 shadow-md">
             View Docs
           </button>
         </div>

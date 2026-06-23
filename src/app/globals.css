@@ -4,9 +4,14 @@
 
 @layer base {
   :root {
-    --background: #1A1A1F;
-    --foreground: #FAFAFA;
-    --accent: #99E2C6;
+    --background: #09090b; /* Deep OLED Black */
+    --foreground: #fafafa;
+    --accent: #10b981; /* SuperGlow Emerald */
+    --accent-glow: rgba(16, 185, 129, 0.4);
+    --surface: #121215;
+    --surface-hover: #1e1e24;
+    --border: rgba(255, 255, 255, 0.05);
+    --border-hover: rgba(255, 255, 255, 0.15);
   }
 
   body {
@@ -18,30 +23,42 @@
 
 @layer utilities {
   .panel {
-    @apply bg-[#25252B] rounded-[20px] border border-white/[0.02] shadow-sm overflow-hidden;
+    @apply bg-[var(--surface)] rounded-[24px] border border-[var(--border)] shadow-xl overflow-hidden backdrop-blur-xl transition-all duration-300;
   }
   
+  .glass-panel {
+    @apply bg-white/[0.02] backdrop-blur-2xl rounded-[32px] border border-white/[0.05] shadow-[0_8px_30px_rgb(0,0,0,0.4)] transition-colors hover:border-white/10 hover:bg-white/[0.04];
+  }
+
+  .text-glow {
+    text-shadow: 0 0 20px var(--accent-glow);
+  }
+
+  .text-glow-blue {
+    text-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
+  }
+
   .btn-primary {
-    @apply bg-[#99E2C6] text-[#1A1A1F] font-semibold px-6 py-3 rounded-full hover:bg-[#A7F3D0] hover:-translate-y-0.5 transition-all duration-300 shadow-sm;
+    @apply bg-gradient-to-r from-emerald-500 to-cyan-500 text-white font-bold px-6 py-3 rounded-full hover:from-emerald-400 hover:to-cyan-400 hover:-translate-y-0.5 transition-all duration-300 shadow-[0_0_20px_rgba(16,185,129,0.3)];
   }
   
   .btn-secondary {
-    @apply bg-[#2A2A32] text-[#FAFAFA] font-medium px-6 py-3 rounded-full border border-white/[0.05] hover:bg-[#32323A] hover:-translate-y-0.5 transition-all duration-300;
+    @apply bg-[var(--surface-hover)] text-white font-semibold px-6 py-3 rounded-full border border-[var(--border)] hover:bg-[#25252b] hover:border-white/20 hover:-translate-y-0.5 transition-all duration-300 shadow-md;
   }
   
   .glass-input {
-    @apply bg-[#1A1A1F] border border-white/[0.05] rounded-xl px-5 py-3 text-white placeholder-[#94A3B8] focus:outline-none focus:border-[#99E2C6] transition-all;
+    @apply bg-[#121215] border border-white/[0.08] rounded-2xl px-5 py-3.5 text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/50 focus:bg-[#1a1a1f] transition-all shadow-inner;
   }
 
   .nav-pill {
-    @apply flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-[#94A3B8] hover:text-white hover:bg-[#25252B] transition-all duration-300;
+    @apply flex items-center gap-3 px-4 py-3.5 rounded-2xl text-sm font-semibold text-slate-400 hover:text-white hover:bg-white/[0.04] transition-all duration-300 border border-transparent;
   }
   
   .nav-pill.active {
-    @apply text-white font-bold bg-white/[0.03];
+    @apply text-white font-bold bg-white/[0.06] border-white/10 shadow-sm;
   }
 
-  /* Custom scrollbar for dark theme */
+  /* Refined minimal scrollbar */
   ::-webkit-scrollbar {
     width: 6px;
     height: 6px;
@@ -54,6 +71,17 @@
     border-radius: 10px;
   }
   ::-webkit-scrollbar-thumb:hover {
-    background: rgba(153, 226, 198, 0.5);
+    background: rgba(16, 185, 129, 0.4);
+  }
+
+  /* Custom scrollbar class for inner containers */
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 4px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.05);
+  }
+  .custom-scrollbar:hover::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.15);
   }
 }
